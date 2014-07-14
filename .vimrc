@@ -46,6 +46,13 @@ nmap G Gzz
 nmap n nzz
 nmap N Nzz
 
+ino ][ <Esc>
+ino jjk <Esc>
+nno ; :
+nno : ;
+vno : ;
+vno ; :
+
 "quick pairs
 imap <leader>' ''<ESC>i
 imap <leader>" ""<ESC>i
