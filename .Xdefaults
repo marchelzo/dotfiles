@@ -1,0 +1,25 @@
+ ! Xft.hinting: 1
+ ! Xft.hintstyle: hintfull
+ ! Xft.antialias: 1
+ ! Xft.dpi: 96
+
+URxvt.font:  xft:Tamsyn:pixelsize=17
+URxvt*depth: 32
+urxvt.background: rgba:1211/1111/1211/FFFF
+urxvt.foreground: rgba:EEEE/EEEE/CCCC/ffff
+URxvt*borderless: 1
+URxvt*scrollBar:            false
+URxvt*saveLines:  5000
+URxvt*termName:    rxvt-unicode-256color
+URxvt.perl-ext-common: default,matcher
+URxvt.url-launcher: google-chrome-stable
+URxvt.matcher.button: 1
+URxvt*cursorColor: #B9BAA0
+
+URxvt.keysym.Control-Up:   \033[1;5A
+URxvt.keysym.Control-Down:    \033[1;5B
+URxvt.keysym.Control-Left:    \033[1;5D
+URxvt.keysym.Control-Right:    \033[1;5C
+
+ ! set emacs default dimensions
+Emacs.geometry: 100x44

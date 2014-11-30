@@ -9,7 +9,7 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
@@ -20,7 +20,7 @@ Plugin 'gmarik/Vundle.vim'
 " Plugin 'tpope/vim-fugitive'
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
-Plugin 'mattn/emmet-vim'
+" Plugin 'mattn/emmet-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'tpope/vim-surround'
@@ -30,13 +30,21 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'scrooloose/syntastic'
 Plugin 'godlygeek/tabular'
-Plugin 'flazz/vim-colorschemes'
+" Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-scripts/ScrollColors'
 Plugin 'kien/ctrlp.vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'ConvertBase.vim'
+Plugin 'KabbAmine/vCoolor.vim'
+Plugin 'tomasr/molokai'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'talek/obvious-resize'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'jceb/vim-orgmode'
+Plugin 'KevinGoodsell/vim-csexact'
 
 " Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git'
 " git repos on your local machine (i.e. when working on your own plugin)
 " Plugin 'file:///home/gmarik/path/to/plugin'
 " The sparkup vim script is in a subdirectory of this repo called vim.
@@ -49,7 +57,7 @@ Plugin 'git://git.wincent.com/command-t.git'
 call vundle#end()            " required
 filetype plugin on    " required
 " To ignore plugin indent changes, instead use:
-"filetype plugin on
+" filetype plugin on
 "
 " Brief help
 " :PluginList       - lists configured plugins
@@ -61,7 +69,7 @@ filetype plugin on    " required
 " Put your non-Plugin stuff after this line
 " ==================== End Vundle Settings ================================>
 
-"automatically cd into the directory of the current file
+" automatically cd into the directory of the current file
 autocmd BufEnter * execute "chdir ".escape(expand("%:p:h"), ' ')
 
 " ======== Ctrl-P {
@@ -69,7 +77,6 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 "======= }
-
 
 " ===== ultisnips {
 let g:UltiSnipsExpandTrigger="<tab>"
@@ -86,25 +93,32 @@ let g:syntastic_auto_loc_list = 1
 
 
 " indentation
-set tabstop=6
 set smarttab
 set expandtab
-set softtabstop=6
-set shiftwidth=6
+set softtabstop=4
+set shiftwidth=4
 set shiftround
 set nojoinspaces
 
+" Misc
 set t_Co=256
 syntax on
 set nu
 set autoindent
 command! W w !sudo tee % > /dev/null
 set ttimeoutlen=50
+set laststatus=2
 
+set wildmenu
+set wildmode=longest,full
+
+set t_Co=256
+let g:rehash256=1
+let g:molokai_original=1
+colo base16-ocean
 set background=dark
-colorscheme base16-solarized
 
-"set emmet key
+" set emmet key
 let g:user_emmet_leader_key = '<c-e>'
 
 
@@ -119,23 +133,40 @@ ino <right> <Nop>
 ino <up> <Nop>
 
 
-" convenience remaps
+" convenience mappings
 nmap G Gzz
 nmap n nzz
 nmap N Nzz
 
+nore j gj
+nore k gk
+
+nore Y y$
+
 ino jk <Esc>
+vno jk <Esc>
+cno jk <c-c>
 nno ; :
 nno : ;
 vno : ;
 vno ; :
 
-"quick pairs
+cno <c-a> <Home>
+cno <c-a><c-k> <c-c>:
+
+
+
+" Obvious Resize Mappings
+noremap <silent> <C-Up> :ObviousResizeUp<CR>
+noremap <silent> <C-Down> :ObviousResizeDown<CR>
+noremap <silent> <C-Left> :ObviousResizeLeft<CR>
+noremap <silent> <C-Right> :ObviousResizeRight<CR>
+
+" quick pairs
 imap <leader>' ''<ESC>i
 imap <leader>" ""<ESC>i
 imap <leader>( ()<ESC>i
 imap <leader>[ []<ESC>i
-
 
 " curly brace code blocks
 inoremap {<CR> {<CR>}<Esc>ko<Tab>
@@ -144,10 +175,90 @@ inoremap {<CR> {<CR>}<Esc>ko<Tab>
 imap <C-s> <C-o><C-s>
 nno <C-s> :w<CR>
 
-"add another way to exit insert mode
+" add another way to exit insert mode
 ino ;; <Esc>
 
 " ================ Leader Mappings ===================
 " Swap the place of the current word under the cursor and the word that follows
 nno <Leader>sw ElxdBEa<Space><Esc>pBB
+ino <Leader>cc <esc>maviw~`aa
+no <Leader>ss :s/\v
+nno <Leader>sg :%s/\v
 
+" make tmux colors work
+if &term != "rxvt-unicode-256color" && !has('gui_running')
+    set term=screen-256color
+endif
+
+set mouse=a
+set ttymouse=xterm2
+
+function! ColoName()
+    if exists("g:colors_name")
+        return g:colors_name
+    else
+        return "default"
+    endif
+endfunction
+
+set cursorline
+
+function! Spacing(n)
+    let corner_case = (winwidth(0) < 75 && a:n == 4) ? 3 : 0
+    let x = a:n == 4 ? 2 : 0
+    let whitespace = winwidth(0) - 32
+    let whitepspace = whitespace - strlen(@%)
+    let whitespace = whitespace - strlen(&filetype)
+    if strlen(&fenc)
+        let whitespace = whitespace - strlen(&fenc)
+    else
+        let whitespace = whitespace - strlen(&enc)
+    endif
+
+    let whitespace = whitespace - strlen(line("$"))
+    if &modified
+        let whitespace = whitespace - 3
+    endif
+
+    if &filetype == "help"
+        let whitespace = whitespace - 6
+    endif
+
+    if &readonly
+        let whitespace = whitespace - 4
+    endif
+
+    return repeat(" ", float2nr(round(whitespace / 10)) * a:n - corner_case - x)
+endfunction
+
+" Status Line Customizations
+set statusline=%([%t]%m%r%h%)%{Spacing(4)}[%n]\ \|\ %y%{Spacing(1)}\ \ Column:\ %02c%{Spacing(1)}%=[%{strlen(&fenc)?&fenc:&enc}]%{Spacing(1)}Lines:\ %L%{Spacing(1)}[%p%%]
+
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsListSnippets="<c-e>"
+" this mapping Enter key to <C-y> to chose the current highlight item 
+" and close the selection list, same as other IDEs.
+" CONFLICT with some plugins like tpope/Endwise
+" inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" set the backupdir and directory so we don't clutter everything with swap files
+set backup
+set directory=~/.vim/swapfiles//
+set undodir=~/.vim/undo//
+set backupdir=~/.vim/backup//
